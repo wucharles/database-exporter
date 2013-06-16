@@ -49,7 +49,7 @@ public interface Constants {
 	
 	public static final String CONST_SRC_PROP_FILE = "config/src-DataSource.properties";
 	
-	public static final String CONST_DEST_PROP_FILE = "config/dest-DataSource.properties";
+	public static final String CONST_DEST_PROP_FILE = "config/target-DataSource.properties";
 	
 	public static final String CONST_DEST_DB_CASE_SENSITIVE = "DEST_DB_CASE_SENSITIVE";
 	

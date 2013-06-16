@@ -4,9 +4,11 @@
 	<description>build the db-export package(zip)</description>
 	
 	<property name="gitRoot" value="G:\workspace\Java\github-prj\database-exporter"/>
+	
+	<property name="zipRoot" value="${basedir}/target/ant/zip/export"/>
 
 	<target name="clean">
-		<delete dir="${basedir}/bin" quiet="true" includeemptydirs="yes">
+		<!--delete dir="${basedir}/bin" quiet="true" includeemptydirs="yes">
 			<include name="**"/>
 		</delete>
 		<delete dir="${basedir}/lib" quiet="true" includeemptydirs="yes">
@@ -14,14 +16,18 @@
 		</delete>
 		<delete dir="${basedir}/plugins" quiet="true" includeemptydirs="yes">
 			<include name="**"/>
-		</delete>
+		</delete-->
 		<delete dir="${basedir}/target/ant" quiet="true" includeemptydirs="yes">
 			<include name="**"/>
 		</delete>
+		
 		<mkdir dir="${basedir}/target/ant"/>
 		<mkdir dir="${basedir}/target/ant/classes"/>
 		<mkdir dir="${basedir}/target/ant/jar"/>
-		<mkdir dir="${basedir}/target/ant/zip/export"/>
+		<mkdir dir="${zipRoot}"/>
+		<mkdir dir="${zipRoot}/bin"/>
+		<mkdir dir="${zipRoot}/lib"/>
+		<mkdir dir="${zipRoot}/plugins"/>
 	</target>
 
 	<target name="compile" depends="clean">
@@ -37,12 +43,12 @@
 	</target>
 
 	<target name="package" depends="compile">
-		<jar destfile="${basedir}/bin/bootstrap.jar" basedir="${basedir}/target/ant/classes"
+		<jar destfile="${zipRoot}/bin/bootstrap.jar" basedir="${basedir}/target/ant/classes"
 			manifest="${basedir}/src/main/resources/META-INFO2/MANIFEST">
 			<include name = "org/db/export/startup/*"/>
 		</jar>
 		
-		<jar destfile="${basedir}/lib/db-export-common.jar" basedir="${basedir}/target/ant/classes">
+		<jar destfile="${zipRoot}/lib/db-export-common.jar" basedir="${basedir}/target/ant/classes">
 			<include name = "org/db/export/common/*"/>
 			<include name = "org/db/export/common/util/*"/>
 			<include name = "org/db/export/common/log/*"/>
@@ -52,14 +58,14 @@
 			<include name = "org/db/export/common/runner/AbstractRunner.class"/>
 		</jar>
 		
-		<jar destfile="${basedir}/lib/db-export-runner.jar" basedir="${basedir}/target/ant/classes">
+		<jar destfile="${zipRoot}/lib/db-export-runner.jar" basedir="${basedir}/target/ant/classes">
 			<include name = "org/db/export/common/runner/ExecutorService.class"/>
 			<include name = "org/db/export/common/runner/config/*"/>
 			<include name = "org/db/export/common/runner/type/*"/>
 			<include name = "org/db/export/common/runner/impl/*"/>
 		</jar>
 		
-		<jar destfile="${basedir}/plugins/mysql-exporter.jar">
+		<jar destfile="${zipRoot}/plugins/mysql-exporter.jar">
 			<fileset dir="${basedir}/target/ant/classes">
 				<include name = "org/db/export/mysql/**/*"/>
 			</fileset>
@@ -68,7 +74,7 @@
 			</fileset>
 		</jar>
 		
-		<jar destfile="${basedir}/plugins/oracle-exporter.jar">
+		<jar destfile="${zipRoot}/plugins/oracle-exporter.jar">
 			<fileset dir="${basedir}/target/ant/classes">
 				<include name = "org/db/export/oracle/**/*"/>
 			</fileset>
@@ -77,32 +83,20 @@
 			</fileset>
 		</jar>
 		
-		<copy todir="${basedir}/bin">
+		<copy todir="${zipRoot}/bin">
 			<fileset dir="${basedir}/src/main/resources">
 				<include name="*.bat" />
 				<include name="*.sh" />
 			</fileset>
 		</copy>
 		
-		<copy todir="${basedir}/lib">
-			<fileset dir="${basedir}/src/main/resources">
+		<copy todir="${zipRoot}/lib">
+			<fileset dir="${basedir}/lib">
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-
-		<copy todir="${basedir}/target/ant/zip/export">
-			<fileset dir="${basedir}">
-				<include name="bin/*" />
-			</fileset>
-			
-			<fileset dir="${basedir}">
-				<include name="plugins/*" />
-			</fileset>
-			
-			<fileset dir="${basedir}">
-				<include name="lib/*" />
-			</fileset>
-
+		
+		<copy todir="${zipRoot}">
 			<fileset dir="${basedir}/src/main/resources">
 				<include name="config/**" />
 				<include name="README.txt" />
@@ -123,6 +117,8 @@
 				<exclude name = ".classpath"/>
 				<exclude name = ".project"/>
 				<exclude name = "export.sql"/>
+				<exclude name = "src/main/resources/config/src-DataSource.properties"/>
+				<exclude name = "src/main/resources/config/target-DataSource.properties"/>
 			</fileset>
 		</copy>
 	</target>
