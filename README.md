@@ -33,3 +33,9 @@ Usage:
     1. In Linux: cd bin ; ./export.sh
     
     2. In Windows: cd bin & export.bat
+
+    Note: Before execute the shell script, install Java runtime in you PC.
+
+Configure:
+
+    1.
