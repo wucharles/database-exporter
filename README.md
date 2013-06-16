@@ -27,3 +27,9 @@ Build:
     3. mvn package
     
     4.use 'db-export.zip' to export database data
+
+Usage:
+
+    1. In Linux: cd bin ; ./export.sh
+    
+    2. In Windows: cd bin & export.bat
