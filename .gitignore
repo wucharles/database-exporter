@@ -4,3 +4,12 @@
 *.jar
 *.war
 *.ear
+
+#eclipse & maven
+/.settings/
+/target/
+.classpath
+.project
+
+#auto generate
+export.sql

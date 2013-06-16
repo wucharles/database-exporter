@@ -1,0 +1,129 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<project name = "db-export" basedir="." default="package">
+	<description>build the db-export package(zip)</description>
+	
+	<property name="gitRoot" value="G:\workspace\Java\github-prj\database-exporter"/>
+
+	<target name="clean">
+		<delete dir="${basedir}/bin" quiet="true" includeemptydirs="yes">
+			<include name="**"/>
+		</delete>
+		<delete dir="${basedir}/lib" quiet="true" includeemptydirs="yes">
+			<exclude name="tomcat-*.jar"/>
+		</delete>
+		<delete dir="${basedir}/plugins" quiet="true" includeemptydirs="yes">
+			<include name="**"/>
+		</delete>
+		<delete dir="${basedir}/target/ant" quiet="true" includeemptydirs="yes">
+			<include name="**"/>
+		</delete>
+		<mkdir dir="${basedir}/target/ant"/>
+		<mkdir dir="${basedir}/target/ant/classes"/>
+		<mkdir dir="${basedir}/target/ant/jar"/>
+		<mkdir dir="${basedir}/target/ant/zip/export"/>
+	</target>
+
+	<target name="compile" depends="clean">
+		<javac destdir="${basedir}/target/ant/classes" debug="no"
+				srcdir="${basedir}/src/main/java" encoding="UTF-8">
+			<include name = "**"/>
+			<classpath>
+				<fileset dir="${basedir}/lib">
+					<include name = "tomcat-*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="package" depends="compile">
+		<jar destfile="${basedir}/bin/bootstrap.jar" basedir="${basedir}/target/ant/classes"
+			manifest="${basedir}/src/main/resources/META-INFO2/MANIFEST">
+			<include name = "org/db/export/startup/*"/>
+		</jar>
+		
+		<jar destfile="${basedir}/lib/db-export-common.jar" basedir="${basedir}/target/ant/classes">
+			<include name = "org/db/export/common/*"/>
+			<include name = "org/db/export/common/util/*"/>
+			<include name = "org/db/export/common/log/*"/>
+			<include name = "org/db/export/common/type/*"/>
+			<include name = "org/db/export/common/impl/*"/>
+			<include name = "org/db/export/common/runner/Runner.class"/>
+			<include name = "org/db/export/common/runner/AbstractRunner.class"/>
+		</jar>
+		
+		<jar destfile="${basedir}/lib/db-export-runner.jar" basedir="${basedir}/target/ant/classes">
+			<include name = "org/db/export/common/runner/ExecutorService.class"/>
+			<include name = "org/db/export/common/runner/config/*"/>
+			<include name = "org/db/export/common/runner/type/*"/>
+			<include name = "org/db/export/common/runner/impl/*"/>
+		</jar>
+		
+		<jar destfile="${basedir}/plugins/mysql-exporter.jar">
+			<fileset dir="${basedir}/target/ant/classes">
+				<include name = "org/db/export/mysql/**/*"/>
+			</fileset>
+			<fileset dir="${basedir}/src/main/resources/plugins/mysql">
+				<include name = "**/*"/>
+			</fileset>
+		</jar>
+		
+		<jar destfile="${basedir}/plugins/oracle-exporter.jar">
+			<fileset dir="${basedir}/target/ant/classes">
+				<include name = "org/db/export/oracle/**/*"/>
+			</fileset>
+			<fileset dir="${basedir}/src/main/resources/plugins/oracle">
+				<include name = "**/*"/>
+			</fileset>
+		</jar>
+		
+		<copy todir="${basedir}/bin">
+			<fileset dir="${basedir}/src/main/resources">
+				<include name="*.bat" />
+				<include name="*.sh" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${basedir}/lib">
+			<fileset dir="${basedir}/src/main/resources">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+
+		<copy todir="${basedir}/target/ant/zip/export">
+			<fileset dir="${basedir}">
+				<include name="bin/*" />
+			</fileset>
+			
+			<fileset dir="${basedir}">
+				<include name="plugins/*" />
+			</fileset>
+			
+			<fileset dir="${basedir}">
+				<include name="lib/*" />
+			</fileset>
+
+			<fileset dir="${basedir}/src/main/resources">
+				<include name="config/**" />
+				<include name="README.txt" />
+			</fileset>
+		</copy>
+
+		<zip destfile="${basedir}/target/ant/db-export.zip" whenempty="skip"
+			 basedir="${basedir}/target/ant/zip">
+			<include name = "**"/>
+		</zip>
+	</target>
+	
+	<target name="copy2git">
+		<copy todir="${gitRoot}">
+			<fileset dir="${basedir}">
+				<exclude name = ".settings/**"/>
+				<exclude name = "target/**"/>
+				<exclude name = ".classpath"/>
+				<exclude name = ".project"/>
+				<exclude name = "export.sql"/>
+			</fileset>
+		</copy>
+	</target>
+</project>
