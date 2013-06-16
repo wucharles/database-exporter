@@ -63,6 +63,12 @@ public interface Constants {
 	
 	public static final String CONST_EXPORT_TABLE_ALIAS = "EXPORT_TABLE_ALIAS";
 	
+	public static final String CONST_PRINT_INDENT = "    ";
+	
+	public static final String CONST_PRINT_INDENTx2 = "        ";
+	
+	public static final String CONST_PRINT_INDENTx3 = "          ";
+	
 	public static final int DEFAULT_PAGE_SIZE = 500;
 	
 	public static final int DEFAULT_CORE_POOL_SIZE = 10;

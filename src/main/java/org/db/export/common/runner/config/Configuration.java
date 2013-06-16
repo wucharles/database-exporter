@@ -199,29 +199,38 @@ public class Configuration {
 	}
 	
 	private void printConfigInfo() {
-		StringBuilder info = new StringBuilder("数据库导出配置信息：\n");
+		StringBuilder info = new StringBuilder("\nDatabase Exporter Configuration:\n");
 		
 		//数据库类型
-		info.append("\t源数据库类型：     " + getSrcExporter().getDbName())
-			 .append("，schema = ").append(getSrcSchema()).append("\n");
-		info.append("\t目标数据库类型： " + getTargetExporter().getDbName())
-		     .append("，schema = ").append(getTargetSchema()).append("\n");
+		info.append(Constants.CONST_PRINT_INDENT)
+			 .append("Source database type: " + getSrcExporter().getDbName())
+			 .append(", schema = ").append(getSrcSchema()).append("\n\n");
+		info.append(Constants.CONST_PRINT_INDENT)
+			 .append("Target database type: " + getTargetExporter().getDbName())
+		     .append(", schema = ").append(getTargetSchema()).append("\n\n");
 		
 		//导出模式
-		info.append("\t导出导入SQL： ").append(getExportSqlFile()).append("\n");
+		info.append(Constants.CONST_PRINT_INDENT)
+			.append("The import/export SQL: ").append(getExportSqlFile()).append("\n\n");
 		
 		//导出模式
-		info.append("\t数据导出模式： " + exportMode).append("\n");
+		info.append(Constants.CONST_PRINT_INDENT)
+			.append("Database export model: " + exportMode).append("\n\n");
 		
 		//预处理
-		info.append("\t导出前清空目标数据库中需要导入表的数据： " + isClearSrcTablesData()).append("\n");
+		info.append(Constants.CONST_PRINT_INDENT)
+			.append("Whether clear all target table data before exporting: " + isClearSrcTablesData()).append("\n\n");
 		
 		//执行属性
-		info.append("\t导出数据操作特性\n").
-			 append("\t\t并发线程池最小活动线程数：").append(getCorePoolSize()).append("\n").
-			 append("\t\t并发线程池最大活动线程数：").append(getMaxPoolSize()).append("\n").
-			 append("\t\t源数据获取数据每页大小：").append(getPageSize()).append("\n").
-			 append("\t\t每个导出表并发线程数量：").append(getParallelThreadSize()).append("\n");
+		info.append(Constants.CONST_PRINT_INDENT).append("The export runner config\n")
+			.append(Constants.CONST_PRINT_INDENTx2)
+			.append("The core size of thread-pool: ").append(getCorePoolSize()).append("\n\n")
+			.append(Constants.CONST_PRINT_INDENTx2)
+			.append("The max size of thread-pool: ").append(getMaxPoolSize()).append("\n\n")
+			.append(Constants.CONST_PRINT_INDENTx2)
+			.append("The page size of fetching data: ").append(getPageSize()).append("\n\n")
+			.append(Constants.CONST_PRINT_INDENTx2)
+			.append("The threads of per table: ").append(getParallelThreadSize()).append("\n\n");
 		
 		//TODO: post sql?
 		//info.append("\t每个表导出完毕后需要执行的SQL：").append((POST_SQL == null ? "无" : POST_SQL)).append("\n");
@@ -242,36 +251,35 @@ public class Configuration {
 				onlyInTarget.add(table.getName());
 			}
 		}
-		info.append("\t导出的表信息\n");
+		info.append(Constants.CONST_PRINT_INDENT).append("Table information\n");
 		
-		printExportTableInfo(info, "需要导出的表：", tables);
+		printExportTableInfo(info, "The tables need to be exported", tables);
 		
-		printExportTableInfo(info, "只存在源数据库的表（不导出）：", onlyInSrc);
+		printExportTableInfo(info, "The tables only exists in source databas", onlyInSrc);
 		
-		printExportTableInfo(info, "只存在目标数据库的表（不导出）：", onlyInTarget);
+		printExportTableInfo(info, "The tables only exists in target databas", onlyInTarget);
 		
 		log.info(info.toString());
 	}
 	
 	private static void printExportTableInfo(StringBuilder buffer, String title, Set<String> tables) {
-		final String spaces = "    ";
-		buffer.append("\t").append(spaces).append(title);
+		buffer.append(Constants.CONST_PRINT_INDENTx2).append(title);
 		if(tables == null || tables.size() <= 0) {
-			buffer.append("无\n");
+			buffer.append("\n").append(Constants.CONST_PRINT_INDENTx3).append("----\n\n");
 			
 			return;
 		}
 		
-		buffer.append("\n\t").append(spaces).append(spaces);
+		buffer.append("\n").append(Constants.CONST_PRINT_INDENTx3);
 		List<List<String>> cells = CommonUtils.slice(new ArrayList<String>(tables), 5);
 		for(List<String> cell : cells) {
 			for(String table : cell) {
-				buffer.append(table).append(",");
+				buffer.append(table).append(", ");
 			}
-			buffer.setLength(buffer.length() - 1);
-			buffer.append("\n\t").append(spaces).append(spaces);
+			buffer.setLength(buffer.length() - 2);
+			buffer.append("\n").append(Constants.CONST_PRINT_INDENTx3);
 		}
-		buffer.setLength(buffer.length() - spaces.length() * 2 - 2);
+		buffer.setLength(buffer.length() - Constants.CONST_PRINT_INDENTx3.length());
 		buffer.append("\n");
 	}
 	
@@ -402,43 +410,9 @@ public class Configuration {
 		}
 		
 		if(srcMeta == null && targetMeta == null) {
-			log.warn("表[" + originTable + "]即不在源数据库也不在目标数据库中.");
+			log.warn("Table[" + originTable + "]not exists in source and target database.");
 		}
 	}
-
-//	private void checkMetaData(Set<String> tables, boolean targetDb,  Map<String, TableMetaData> src,
-//			Map<String, TableMetaData> target,
-//			MetaDataStatus toStatus) {
-//		for(String table : tables) {
-//			final Set<String> alias = getTableAliasMapping().get(table);
-//			
-//			//target table maybe has alias name.
-//			final String tableAlias = CommonUtils.isNotEmpty(alias) ? alias.toArray()[0].toString() : table;
-//			
-//			final String sourceTableName = targetDb ? getTargetTable(tableAlias) : getSrcTable(table);
-//			final String targetTableName = !targetDb ? getTargetTable(tableAlias) : getSrcTable(table);
-//			//if target has alias, then use alias name.
-//			TableMetaData value = src.get(sourceTableName);
-//			
-//			if( value == null ) {
-//				continue;
-//			}
-//			
-//			if(!target.containsKey(targetTableName)) {
-//				value.setStatus(toStatus);
-//				
-//				continue;
-//			}
-//			
-//			final TableMetaData targetTable = target.get(targetTableName);
-//			final TableMetaData srcTable = value;
-//			for(ColumnMetaData col : srcTable.getOrderedAllCols()) {
-//				if(!targetTable.getColumnAllMapping().containsKey(col.getSourceName())) {
-//					col.setStatus(toStatus);
-//				}
-//			}
-//		}
-//	}
 	
 	private void checkMetaData4Target(Set<String> tables,  Map<String, TableMetaData> src,
 			Map<String, TableMetaData> target, MetaDataStatus toStatus) {
@@ -717,7 +691,7 @@ public class Configuration {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			
-			throw new RuntimeException("需要正确配置“源数据库”和“目标数据库”的驱动程序，参考：jdbc.driverClassName.");
+			throw new RuntimeException("Please configure source and target database JDBC driver class, reference: jdbc.driverClassName.");
 		}
 		
 		//src db case sensitive?
@@ -1074,7 +1048,7 @@ public class Configuration {
 		}
 		
 		if(loader == null) {
-			throw new IllegalArgumentException("程序没有正常启动，找不到正确的ClassLoader.");
+			throw new IllegalArgumentException("App stop with exception, conn't find 'ClassLoader'.");
 		}
 		
 		setLoader(loader);

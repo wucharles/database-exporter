@@ -49,8 +49,8 @@ public abstract class AbstractRunner implements Runner {
 		
 		initExportEnv();
 		exportAllTables(getContext().getExprotTables());
-		log.info("导出所有数据(" + getContext().getExprotTables().size() + "个表)耗时："
-				+ ((System.currentTimeMillis() - start)/1000/60) + " 分钟");
+		log.info("All table has been exported( " + getContext().getExprotTables().size() + " tables), time consuming: "
+				+ ((System.currentTimeMillis() - start)/1000/60) + " minute");
 	}
 	
 	protected void exportAllTables(List<Triple<String, String, String>> exprotTables)  throws RunnerException {
@@ -133,16 +133,16 @@ public abstract class AbstractRunner implements Runner {
 	 * @return
 	 */
 	protected boolean confirmContinue() {
-		return CommonUtils.confirm("请确认是否进行数据导出操作（yes/no)：",
-				"正在进行导出操作，请耐心等待......",
-				"输入不是" + Constants.CONST_YES + "，确认不进行导出.");
+		return CommonUtils.confirm("Please confirm whether continue exporting(yes/no): ",
+				"operation is going，please waiting......",
+				"Input is '" + Constants.CONST_YES + "', nothing to be done.");
 	}
 	
 	protected boolean confirmClearTableData() {
 		return getContext().isClearSrcTablesData() &&
-				CommonUtils.confirm("请确认是否进行数据清理操作（yes/no)：",
-						"正在进行清理操作，请耐心等待......",
-						"输入不是" + Constants.CONST_YES + "，确认不进行数据清理.");
+				CommonUtils.confirm("Please confirm whether execute clear data(yes/no): ",
+						"operation is going，please waiting......",
+						"Input is '" + Constants.CONST_YES + "', nothing to be done.");
 	}
 
 	public ExporterContext getContext() {

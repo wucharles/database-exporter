@@ -56,7 +56,7 @@ public final class ProgressUtils {
 
 	public void setTotalRows(String table, Long rows) {
 		if(!tableMapping.containsKey(table)) {
-			log.warn("执行上下文中没有导出的表： " + table);
+			log.warn("No table in Executor Context: " + table);
 
 			return;
 		}
@@ -66,7 +66,7 @@ public final class ProgressUtils {
 
 	public void inc(String table, Long rows) {
 		if(!tableMapping.containsKey(table)) {
-			log.warn("执行上下文中没有导出的表： " + table);
+			log.warn("No table in Executor Context: " + table);
 
 			return;
 		}
@@ -75,7 +75,7 @@ public final class ProgressUtils {
 
 		long total = triple.value1;
 		if(total < 0) {
-			log.warn("表[" + table + "]没有正确设置tatoal rows，请检查.<br/>");
+			log.warn("Table[" + table + "]tatoal row size is set incorrectly, please check.<br/>");
 
 			return;
 		}
@@ -93,7 +93,7 @@ public final class ProgressUtils {
 	}
 
 	private void print() {
-		StringBuilder sb = new StringBuilder("执行进度\n");
+		StringBuilder sb = new StringBuilder("Executor progress\n");
 
 		sb.append("\t");
 		for(List<String> cell : cells) {

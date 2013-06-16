@@ -58,12 +58,6 @@ public class ParellelRunner extends AbstractRunner implements Runner{
 	}
 	
 	protected void doClearTableData(Connection con, TableMetaData metaData, String tableName) throws Exception {
-		/*if(metaData.getStatus() != MetaDataStatus.NORMAL) {
-			log.warn("表[" + tableName + "]只存在于目标数据库中，不进行清理.");
-			
-			return;
-		}*/
-		
 		Statement stat = con.createStatement();
 		String schemaPrefix = getContext().getTargetSchemaPrefix();
 		int i = stat.executeUpdate(getContext().getTargetExporter().genClearTableDML(schemaPrefix, tableName));
