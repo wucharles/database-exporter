@@ -38,4 +38,16 @@ Usage:
 
 Configure:
 
-    1.
+    1.All configuration files are stored in 'config' directory.
+    
+    2.'commons.properties' file related to thread-pool and other common settings
+    
+    3.'database.properties' file related to database settings
+    
+    4.'mapping.properties' file related to column mapping. If target table column names
+       are different to source table column names, it tell exporter how to map source
+       column name to target column name.
+    
+    5.'src-DataSource.properties' file related to source database JDBC configuration.
+    
+    6.'target-DataSource.properties' file related to target database JDBC configuration.
