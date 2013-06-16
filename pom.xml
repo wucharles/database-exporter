@@ -16,6 +16,9 @@
     <mysql.version>5.1.15</mysql.version>
     <oracle.version>11.2.0.2.0</oracle.version>
     <tomcat-jdbc.version>7.0.40</tomcat-jdbc.version>
+    <maven-compiler-plugin.version>2.0.2</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>2.15</maven-surefire-plugin.version>
+    <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
   </properties>
 
   <dependencies>
@@ -48,4 +51,62 @@
 	  <version>${tomcat-jdbc.version}</version>
 	</dependency>
   </dependencies>
+  
+  <build>
+      <plugins>
+	      <plugin>
+		  	<groupId>org.apache.maven.plugins</groupId>
+		  	<artifactId>maven-compiler-plugin</artifactId>
+		  	<version>${maven-compiler-plugin.version}</version>
+		  	<configuration>
+		  		<source>1.5</source>
+		  		<target>1.5</target>
+		  		<encoding>${project.build.sourceEncoding}</encoding>
+		  	</configuration>
+		  </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <version>${maven-surefire-plugin.version}</version>
+              <configuration>
+                  <skip>true</skip>
+                  <testFailureIgnore>false</testFailureIgnore>
+              </configuration>
+          </plugin>
+          <plugin>
+              <artifactId>maven-antrun-plugin</artifactId>
+              <version>${maven-antrun-plugin.version}</version>
+              <executions>
+                  <execution>
+                      <phase>package</phase>
+                      <configuration>
+                          <tasks>
+                              <ant antfile="${basedir}/build.xml" target = "package"/>
+                          </tasks>
+                      </configuration>
+                      <goals>
+                          <goal>run</goal>
+                      </goals>
+          	      </execution>
+              </executions>
+           </plugin>
+          <!--plugin>
+              <artifactId>maven-antrun-plugin</artifactId>
+              <version>${maven-antrun-plugin.version}</version>
+              <executions>
+                  <execution>
+                      <phase>clean</phase>
+                      <configuration>
+                          <tasks>
+                              <ant antfile="${basedir}/build.xml" target = "clean"/>
+                          </tasks>
+                      </configuration>
+                      <goals>
+                          <goal>run</goal>
+                      </goals>
+          	      </execution>
+              </executions>
+           </plugin-->
+      </plugins>
+  </build>
 </project>
