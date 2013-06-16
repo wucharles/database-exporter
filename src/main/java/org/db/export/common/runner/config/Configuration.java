@@ -255,9 +255,9 @@ public class Configuration {
 		
 		printExportTableInfo(info, "The tables need to be exported", tables);
 		
-		printExportTableInfo(info, "The tables only exists in source databas", onlyInSrc);
+		printExportTableInfo(info, "The tables only exists in source database", onlyInSrc);
 		
-		printExportTableInfo(info, "The tables only exists in target databas", onlyInTarget);
+		printExportTableInfo(info, "The tables only exists in target database", onlyInTarget);
 		
 		log.info(info.toString());
 	}
