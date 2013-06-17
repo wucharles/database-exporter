@@ -17,6 +17,8 @@ Features:
     
     7.supports one table's data exported concurrently by page.
     
+    8.supports database plugin.
+    
 
 Build:
     
